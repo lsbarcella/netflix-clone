@@ -15,7 +15,7 @@ interface PaginationInterface {
 
 interface ResultsInterface {
   poster_path: string | null
-  // id: number
+  id: number
 }
 
 async function getPolular() {

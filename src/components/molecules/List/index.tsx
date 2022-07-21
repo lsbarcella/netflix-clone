@@ -2,13 +2,19 @@ import React, {useRef} from "react"
 import Title from "../../atoms/Title"
 import { MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos } from "react-icons/md"
 import Button from "../../atoms/Button"
+import { useNavigate } from "react-router-dom"
+import { movieData } from "../../../pages/Catalog/Catalog"
 
 interface ListInterface {
-  moviesImg: string[]
+  movies: movieData[]
   title: string
+  // movieId: number
 }
 
-function List({moviesImg, title}: ListInterface) {
+function List({movies, title, 
+  // movieId
+}: ListInterface) {
+  const navigate = useNavigate()
   const listaRef = useRef<HTMLDivElement>(null)
 
   function scroll(x: number) {
@@ -16,6 +22,10 @@ function List({moviesImg, title}: ListInterface) {
       left: x,
       behavior: 'smooth',
     })
+  }
+
+  function sendToMovie(id:number) {
+    navigate('/filme/' + String(id))
   }
 
   return (
@@ -32,9 +42,11 @@ function List({moviesImg, title}: ListInterface) {
         <MdOutlineArrowBackIosNew className='icone' size={35} />
       </Button>
       {
-        moviesImg.map((movieImg, index) => {
+        movies.map((movie, index) => {
           return <>
-            <img src={movieImg} alt={`${index}`} />
+            <img src={movie.url} alt={`${index}`}
+             onClick={() => sendToMovie(movie.id)}
+             />
           </>
         })
       }

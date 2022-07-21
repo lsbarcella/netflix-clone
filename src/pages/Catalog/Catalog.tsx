@@ -4,10 +4,17 @@ import * as ApiTmbService from '../../services/apiTmdb'
 import Title from '../../components/atoms/Title'
 import List from '../../components/molecules/List'
 
+export interface movieData {
+  url: string
+  id: number
+}
+
 function Catalog() {
   const navigate = useNavigate()
-  const [popularMovies, setPopularMovies] = useState<string[]>([])
-  const [topRatedMovies, setTopRatedMovies] = useState<string[]>([])
+  const [popularMovies, setPopularMovies] = useState<movieData[]>([])
+  const [topRatedMovies, setTopRatedMovies] = useState<movieData[]>([])
+
+
 
   const imgUrl = 'https://image.tmdb.org/t/p/w300'
 
@@ -22,15 +29,18 @@ function Catalog() {
           const novaResposta = response.results
   
           const novoObjeto = {
-            poster_path: 'Leandro'
+            poster_path: 'Leandro',
+            id: 1
           }
   
           novaResposta.push(novoObjeto)
   
           const movieImgs = response.results.map((result) => {
-            return imgUrl + result.poster_path
+            return {
+              url: imgUrl + result.poster_path,
+              id: result.id
+            }
           })
-          console.log(movieImgs)
           setPopularMovies(movieImgs)
         })
     }
@@ -38,18 +48,23 @@ function Catalog() {
     function searchTopRated() {
       ApiTmbService.getTopRated()
         .then((response) => {
+          console.log(response);
+          
           const novaResposta = response.results
   
           const novoObjeto = {
-            poster_path: 'Leandro'
+            poster_path: 'Leandro',
+            id: 1
           }
   
           novaResposta.push(novoObjeto)
   
           const movieImgs = response.results.map((result) => {
-            return imgUrl + result.poster_path
+            return {
+              url: imgUrl + result.poster_path,
+              id: result.id
+            }
           })
-          console.log(movieImgs)
           setTopRatedMovies(movieImgs)
         })
     }
@@ -58,10 +73,15 @@ function Catalog() {
     searchTopRated()
   }, [])
 
+  // React.useEffect(() => {
+  //   console.log(popularMovies)
+  //   console.log(topRatedMovies)
+  // }, [popularMovies, topRatedMovies])
+
   return <>
     <Title>Catalogo</Title>
-    <List title='Populares'  moviesImg={popularMovies} />
-    <List title='Top Assistidos' moviesImg={topRatedMovies} />
+    <List title='Populares' movies={popularMovies} />
+    <List title='Top Assistidos' movies={topRatedMovies} />
     <button type='button' onClick={() => sendToMovie(438148)}>Redirect</button>
   </>
 }
